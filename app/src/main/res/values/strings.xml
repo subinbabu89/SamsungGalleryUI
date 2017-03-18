@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Samsung Gallery UI</string>
+    <string name="default_content_description_for_imageviews">default content description for imageviews</string>
+</resources>

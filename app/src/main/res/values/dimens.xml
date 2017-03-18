@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="image_width">440dp</dimen>
+    <dimen name="image_height">440dp</dimen>
+    <dimen name="thumbnail_width">420dp</dimen>
+    <dimen name="thumbnail_height">192dp</dimen>
+
+    <dimen name="file_image_width">350dp</dimen>
+    <dimen name="file_image_height">350dp</dimen>
+    <dimen name="measurement_5dp">5dp</dimen>
+    <dimen name="measurement_10dp">10dp</dimen>
+    <dimen name="measurement_15dp">15dp</dimen>
+    <dimen name="folder_name_text_size">30sp</dimen>
+</resources>

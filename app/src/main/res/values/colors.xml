@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="folderCoverBG">#303030</color>
+    <color name="fileNamesBG">#f7f7f7</color>
+    <color name="fileLabelBG">#44000000</color>
+</resources>
