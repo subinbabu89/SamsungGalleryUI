@@ -31,8 +31,10 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
     private List<FolderCover> folderCovers;
     private FolderCoverClickListener folderCoverClickListener;
 
-    private CustomPagerAdapter customPagerAdapter;
     private PeekView peekView;
+
+    private ViewPager viewPager;
+    private CustomPagerAdapter customPagerAdapter;
 
     public FolderCoverAdapter(Context context, List<FolderCover> folderCovers, FolderCoverClickListener folderCoverClickListener, PeekView peekView) {
         this.context = context;
@@ -40,8 +42,9 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
         this.folderCoverClickListener = folderCoverClickListener;
         this.peekView = peekView;
 
+
         View peek = peekView.getPeekView();
-        ViewPager viewPager = (ViewPager) peek.findViewById(R.id.pager);
+        viewPager = (ViewPager) peek.findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(2);
         this.customPagerAdapter = new CustomPagerAdapter(peek.getContext(), null);
         viewPager.setAdapter(customPagerAdapter);
@@ -114,7 +117,19 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
             }
 
             @Override
-            public void onPop(View view, int position) {
+            public void onHide(View view, int position) {
+            }
+        });
+
+        this.peekView.setOnSweepAcrossListener(new PeekView.OnSweepAcrossListener() {
+            @Override
+            public void sweepLeft(int position) {
+                scrollToNextImage(position);
+            }
+
+            @Override
+            public void sweepRight(int position) {
+                scrollToPreviousImage(position);
             }
         });
     }
@@ -122,5 +137,19 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
     private void loadPeekAndPop(int position) {
         customPagerAdapter.setDemoObject(folderCovers.get(position));
         customPagerAdapter.notifyDataSetChanged();
+    }
+
+    private void scrollToNextImage(int position) {
+        folderCovers.get(position).nextImage();
+        if (viewPager.getCurrentItem() < viewPager.getAdapter().getCount() - 1) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+        }
+    }
+
+    private void scrollToPreviousImage(int position) {
+        folderCovers.get(position).previousImage();
+        if (viewPager.getCurrentItem() > 0) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        }
     }
 }

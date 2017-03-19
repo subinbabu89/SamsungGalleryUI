@@ -22,8 +22,8 @@ import self.samsung.gallery.R;
 import self.samsung.gallery.util.Util;
 
 /**
- * Custom class written to handle the pop up view like interface as seen in popular apps like Instagram.
- *
+ * Custom class written to handle the hide up view like interface as seen in popular apps like Instagram.
+ * <p>
  * Created by subin on 3/18/2017.
  */
 
@@ -43,20 +43,25 @@ public class PeekView {
 
     private static final int PEEK_VIEW_MARGIN = 12;
     private static final long LONG_CLICK_DURATION = 200;
-    private static final int ANIMATION_POP_DURATION = 250;
+    private static final int ANIMATION_HIDE_DURATION = 250;
     private static final int ANIMATION_PEEK_DURATION = 275;
 
     private OnGeneralActionListener onGeneralActionListener;
     private ViewGroup parentViewGroup;
 
-    public PeekView(Activity activity,int peekLayout,ViewGroup parentViewGroup){
+    private OnSweepAcrossListener onSweepAcrossListener;
+
+    private int intialTapLocationX = -1;
+
+    public PeekView(Activity activity, int peekLayout, ViewGroup parentViewGroup) {
         this.activity = activity;
         this.peekLayoutId = peekLayout;
         this.parentViewGroup = parentViewGroup;
+
         init();
     }
 
-    private void init(){
+    private void init() {
         this.orientation = activity.getResources().getConfiguration().orientation;
         this.peekViewMargin = Util.convertDpToPx(activity.getApplicationContext(), PEEK_VIEW_MARGIN);
         initialize();
@@ -66,7 +71,7 @@ public class PeekView {
         view.setOnTouchListener(new PeekViewTouchListener(position));
         // onTouchListener will not work correctly if the view doesn't have an
         // onClickListener set, hence adding one if none has been added.
-        if(!view.hasOnClickListeners()){
+        if (!view.hasOnClickListeners()) {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -130,7 +135,7 @@ public class PeekView {
         peekViewOriginalPosition[1] = (peekLayout.getHeight() / 2) - (peekView.getHeight() / 2) + peekViewMargin;
     }
 
-    private void resetPeekView(){
+    private void resetPeekView() {
         peekLayout.setVisibility(View.GONE);
 
         if (peekViewOriginalPosition != null) {
@@ -164,10 +169,10 @@ public class PeekView {
                 cancelPendingTimer(v);
             }
 
-            if (peekShown){
-                if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                    pop(v, position);
-                }
+            if (peekShown) {
+
+                handleTouch(v, event, position);
+
             }
 
             return peekShown;
@@ -200,7 +205,7 @@ public class PeekView {
                     @Override
                     public void run() {
                         peekShown = false;
-                        pop(view, position);
+                        hide(view, position);
                         longHoldRunnable = null;
                     }
                 };
@@ -209,11 +214,29 @@ public class PeekView {
         }
     }
 
-    private void pop(@NonNull View longClickView, int index) {
-        if (onGeneralActionListener != null)
-            onGeneralActionListener.onPop(longClickView, index);
+    private void handleTouch(View v, MotionEvent event, int position) {
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+            hide(v, position);
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            int downX = (int) event.getRawX();
+            if (intialTapLocationX < 0) {
+                intialTapLocationX = downX;
+            }
+            if (intialTapLocationX - downX > 100) {
+                onSweepAcrossListener.sweepLeft(position);
+                intialTapLocationX = downX;
+            } else if (downX - intialTapLocationX > 100) {
+                onSweepAcrossListener.sweepRight(position);
+                intialTapLocationX = downX;
+            }
+        }
+    }
 
-        peekViewAnimationHelper.animatePop(new Animator.AnimatorListener() {
+    private void hide(@NonNull View longClickView, int index) {
+        if (onGeneralActionListener != null)
+            onGeneralActionListener.onHide(longClickView, index);
+
+        peekViewAnimationHelper.animateHide(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
             }
@@ -231,7 +254,7 @@ public class PeekView {
             @Override
             public void onAnimationRepeat(Animator animation) {
             }
-        }, ANIMATION_POP_DURATION);
+        }, ANIMATION_HIDE_DURATION);
     }
 
     private void peek(@NonNull View longClickView, int index) {
@@ -246,6 +269,7 @@ public class PeekView {
 
         if (parentViewGroup != null)
             parentViewGroup.requestDisallowInterceptTouchEvent(true);
+
     }
 
     private void cancelClick(@NonNull View longClickView) {
@@ -268,10 +292,20 @@ public class PeekView {
     public interface OnGeneralActionListener {
         void onPeek(View longClickView, int position);
 
-        void onPop(View longClickView, int position);
+        void onHide(View longClickView, int position);
     }
 
     public void setOnGeneralActionListener(@Nullable OnGeneralActionListener onGeneralActionListener) {
         this.onGeneralActionListener = onGeneralActionListener;
+    }
+
+    public interface OnSweepAcrossListener {
+        void sweepLeft(int position);
+
+        void sweepRight(int position);
+    }
+
+    public void setOnSweepAcrossListener(@Nullable OnSweepAcrossListener onSweepAcrossListener) {
+        this.onSweepAcrossListener = onSweepAcrossListener;
     }
 }

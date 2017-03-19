@@ -55,7 +55,7 @@ class PeekViewAnimationHelper {
      * Animates the peek view to return to it's original position and shrink.
      * Also animate the peek background layout to fade out.
      */
-    void animatePop(Animator.AnimatorListener animatorListener, int duration) {
+    void animateHide(Animator.AnimatorListener animatorListener, int duration) {
         ObjectAnimator animatorLayoutAlpha = ObjectAnimator.ofFloat(peekLayout, "alpha", 0);
         animatorLayoutAlpha.setDuration(duration);
         animatorLayoutAlpha.addListener(animatorListener);
