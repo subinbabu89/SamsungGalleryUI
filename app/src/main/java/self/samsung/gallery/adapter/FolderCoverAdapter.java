@@ -17,6 +17,7 @@ import java.util.List;
 import self.samsung.gallery.R;
 import self.samsung.gallery.model.FolderCover;
 import self.samsung.gallery.peekview.PeekView;
+import self.samsung.gallery.util.Util;
 import self.samsung.gallery.view.SlowerViewPager;
 
 /**
@@ -46,6 +47,7 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
         View peek = peekView.getPeekView();
         viewPager = (SlowerViewPager) peek.findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(2);
+        viewPager.setPageMargin(Util.convertDpToPx(context,5));
         this.customPagerAdapter = new CustomPagerAdapter(peek.getContext());
         viewPager.setAdapter(customPagerAdapter);
         viewPager.setScrollDurationFactor(4);

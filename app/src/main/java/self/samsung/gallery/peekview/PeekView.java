@@ -59,8 +59,6 @@ public class PeekView {
         this.parentViewGroup = parentViewGroup;
 
         init();
-
-        //TODO: 4. add padding to peek view
     }
 
     private void init() {
@@ -271,15 +269,6 @@ public class PeekView {
             parentViewGroup.requestDisallowInterceptTouchEvent(true);
 
     }
-
-//    private void cancelClick(@NonNull View longClickView) {
-//        MotionEvent e = MotionEvent.obtain(SystemClock.uptimeMillis(),
-//                SystemClock.uptimeMillis(),
-//                MotionEvent.ACTION_CANCEL,
-//                0, 0, 0);
-//        longClickView.onTouchEvent(e);
-//        e.recycle();
-//    }
 
     public View getPeekView() {
         return peekView;

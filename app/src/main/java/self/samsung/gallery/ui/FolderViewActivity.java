@@ -29,8 +29,8 @@ public class FolderViewActivity extends AppCompatActivity implements FolderAdapt
             }
         }
         setContentView(R.layout.activity_folder_view);
-        this.overridePendingTransition(R.anim.anim_slide_in_left,
-                R.anim.anim_slide_out_left);
+        this.overridePendingTransition(R.anim.anim_slide_in_up,
+                R.anim.anim_slide_out_up);
         setupRecyclerView();
     }
 

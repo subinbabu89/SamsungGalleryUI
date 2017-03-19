@@ -53,4 +53,13 @@ public class SlowerViewPager extends ViewPager {
         mScroller.setScrollDurationFactor(scrollFactor);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        int size = width > height ? height : width;
+        setMeasuredDimension(size, size);
+    }
 }

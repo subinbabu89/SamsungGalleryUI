@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -8,20 +7,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="8dp">
+        android:layout_margin="@dimen/measurement_10dp">
 
-        <self.samsung.gallery.view.SquareRelativeLayout
-            android:id="@+id/arrow_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            tools:visibility="visible">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <self.samsung.gallery.view.SlowerViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="@dimen/measurement_5dp"
                 android:transitionName="image" />
-        </self.samsung.gallery.view.SquareRelativeLayout>
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 
