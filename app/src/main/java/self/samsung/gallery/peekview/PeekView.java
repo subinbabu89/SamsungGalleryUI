@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Build;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -29,7 +28,7 @@ import self.samsung.gallery.util.Util;
 
 public class PeekView {
 
-    private Activity activity;
+    private final Activity activity;
     private ViewGroup contentView;
 
     private int peekLayoutId = -1;
@@ -47,11 +46,12 @@ public class PeekView {
     private static final int ANIMATION_PEEK_DURATION = 400;
 
     private OnGeneralActionListener onGeneralActionListener;
-    private ViewGroup parentViewGroup;
+    private final ViewGroup parentViewGroup;
 
     private OnSweepAcrossListener onSweepAcrossListener;
 
     private int intialTapLocationX = -1;
+    private int childrenViewCount;
 
     public PeekView(Activity activity, int peekLayout, ViewGroup parentViewGroup) {
         this.activity = activity;
@@ -155,7 +155,7 @@ public class PeekView {
         private Timer longHoldTimer;
         private Runnable longHoldRunnable;
 
-        private int position;
+        private final int position;
 
         private PeekViewTouchListener(int position) {
             this.position = position;
@@ -166,19 +166,19 @@ public class PeekView {
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 peekShown = false;
-                startTimer(v);
+                startTimer();
             } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                cancelPendingTimer(v);
+                cancelPendingTimer();
             }
 
             if (peekShown) {
-                handleTouch(v, event, position);
+                handleTouch(event);
             }
 
             return peekShown;
         }
 
-        private void startTimer(@NonNull final View view) {
+        private void startTimer() {
             longHoldTimer = new Timer();
             longHoldTimer.schedule(new TimerTask() {
                 @Override
@@ -188,7 +188,7 @@ public class PeekView {
                         @Override
                         public void run() {
                             if (peekShown) {
-                                peek(view, position);
+                                peek(position);
                                 longHoldRunnable = null;
                             }
                         }
@@ -198,14 +198,14 @@ public class PeekView {
             }, LONG_CLICK_DURATION);
         }
 
-        private void cancelPendingTimer(@NonNull final View view) {
+        private void cancelPendingTimer() {
             longHoldTimer.cancel();
             if (longHoldRunnable != null) {
                 longHoldRunnable = new Runnable() {
                     @Override
                     public void run() {
                         peekShown = false;
-                        hide(view, position);
+                        hide();
                         longHoldRunnable = null;
                     }
                 };
@@ -214,27 +214,29 @@ public class PeekView {
         }
     }
 
-    private void handleTouch(View v, MotionEvent event, int position) {
+    private void handleTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-            hide(v, position);
+            hide();
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            int movementFactor = (peekView.getWidth() / childrenViewCount) / 2;
+
             int downX = (int) event.getRawX();
             if (intialTapLocationX < 0) {
                 intialTapLocationX = downX;
             }
-            if (intialTapLocationX - downX > 100) {
-                onSweepAcrossListener.sweepLeft(position);
+            if (intialTapLocationX - downX > movementFactor) {
+                onSweepAcrossListener.sweepLeft();
                 intialTapLocationX = downX;
-            } else if (downX - intialTapLocationX > 100) {
-                onSweepAcrossListener.sweepRight(position);
+            } else if (downX - intialTapLocationX > movementFactor) {
+                onSweepAcrossListener.sweepRight();
                 intialTapLocationX = downX;
             }
         }
     }
 
-    private void hide(@NonNull View longClickView, int index) {
+    private void hide() {
         if (onGeneralActionListener != null)
-            onGeneralActionListener.onHide(longClickView, index);
+            onGeneralActionListener.onHide();
 
         peekViewAnimationHelper.animateHide(new Animator.AnimatorListener() {
             @Override
@@ -257,13 +259,11 @@ public class PeekView {
         }, ANIMATION_HIDE_DURATION);
     }
 
-    private void peek(@NonNull View longClickView, int index) {
+    private void peek(int index) {
         if (onGeneralActionListener != null)
-            onGeneralActionListener.onPeek(longClickView, index);
+            onGeneralActionListener.onPeek(index);
 
         peekLayout.setVisibility(View.VISIBLE);
-
-        cancelClick(longClickView);
 
         peekViewAnimationHelper.animatePeek(ANIMATION_PEEK_DURATION);
 
@@ -272,14 +272,14 @@ public class PeekView {
 
     }
 
-    private void cancelClick(@NonNull View longClickView) {
-        MotionEvent e = MotionEvent.obtain(SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                MotionEvent.ACTION_CANCEL,
-                0, 0, 0);
-        longClickView.onTouchEvent(e);
-        e.recycle();
-    }
+//    private void cancelClick(@NonNull View longClickView) {
+//        MotionEvent e = MotionEvent.obtain(SystemClock.uptimeMillis(),
+//                SystemClock.uptimeMillis(),
+//                MotionEvent.ACTION_CANCEL,
+//                0, 0, 0);
+//        longClickView.onTouchEvent(e);
+//        e.recycle();
+//    }
 
     public View getPeekView() {
         return peekView;
@@ -289,10 +289,14 @@ public class PeekView {
         initialiseGestureListener(view, position);
     }
 
-    public interface OnGeneralActionListener {
-        void onPeek(View longClickView, int position);
+    public void calculateMovementFactor(int childViewCount) {
+        this.childrenViewCount = childViewCount;
+    }
 
-        void onHide(View longClickView, int position);
+    public interface OnGeneralActionListener {
+        void onPeek(int position);
+
+        void onHide();
     }
 
     public void setOnGeneralActionListener(@Nullable OnGeneralActionListener onGeneralActionListener) {
@@ -300,9 +304,9 @@ public class PeekView {
     }
 
     public interface OnSweepAcrossListener {
-        void sweepLeft(int position);
+        void sweepLeft();
 
-        void sweepRight(int position);
+        void sweepRight();
     }
 
     public void setOnSweepAcrossListener(@Nullable OnSweepAcrossListener onSweepAcrossListener) {

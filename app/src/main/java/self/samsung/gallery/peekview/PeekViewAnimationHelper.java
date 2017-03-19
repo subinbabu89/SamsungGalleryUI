@@ -16,9 +16,9 @@ import android.view.animation.OvershootInterpolator;
  */
 
 class PeekViewAnimationHelper {
-    private View peekLayout;
-    private View peekView;
-    private Context context;
+    private final View peekLayout;
+    private final View peekView;
+    private final Context context;
 
     PeekViewAnimationHelper(Context context, View peekLayout, View peekView) {
         this.context = context;

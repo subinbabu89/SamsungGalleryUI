@@ -27,14 +27,14 @@ import self.samsung.gallery.view.SlowerViewPager;
 
 public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.FolderCoverViewHolder> {
 
-    private Context context;
-    private List<FolderCover> folderCovers;
-    private FolderCoverClickListener folderCoverClickListener;
+    private final Context context;
+    private final List<FolderCover> folderCovers;
+    private final FolderCoverClickListener folderCoverClickListener;
 
-    private PeekView peekView;
+    private final PeekView peekView;
 
     private SlowerViewPager viewPager;
-    private CustomPagerAdapter customPagerAdapter;
+    private final CustomPagerAdapter customPagerAdapter;
 
     public FolderCoverAdapter(Context context, List<FolderCover> folderCovers, FolderCoverClickListener folderCoverClickListener, PeekView peekView) {
         this.context = context;
@@ -46,7 +46,7 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
         View peek = peekView.getPeekView();
         viewPager = (SlowerViewPager) peek.findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(2);
-        this.customPagerAdapter = new CustomPagerAdapter(peek.getContext(), null);
+        this.customPagerAdapter = new CustomPagerAdapter(peek.getContext());
         viewPager.setAdapter(customPagerAdapter);
         viewPager.setScrollDurationFactor(4);
 
@@ -63,6 +63,7 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
     @Override
     public void onBindViewHolder(FolderCoverViewHolder holder, int position) {
         loadImageFromAssets(context, holder, folderCovers.get(position));
+        peekView.calculateMovementFactor(folderCovers.get(position).getFileNames().size());
         peekView.addLongClickView(holder.view, position);
     }
 
@@ -87,9 +88,9 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
     }
 
     class FolderCoverViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public View view;
-        ImageView imgv_cover_foldercover;
-        TextView txtv_cover_foldername;
+        public final View view;
+        final ImageView imgv_cover_foldercover;
+        final TextView txtv_cover_foldername;
 
         FolderCoverViewHolder(View view) {
             super(view);
@@ -113,12 +114,12 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
     private void setupPeekAndPopStandard() {
         this.peekView.setOnGeneralActionListener(new PeekView.OnGeneralActionListener() {
             @Override
-            public void onPeek(View view, int position) {
+            public void onPeek(int position) {
                 loadPeekAndPop(position);
             }
 
             @Override
-            public void onHide(View view, int position) {
+            public void onHide() {
                 View peek = peekView.getPeekView();
                 viewPager = (SlowerViewPager) peek.findViewById(R.id.pager);
                 viewPager.setCurrentItem(0);
@@ -127,12 +128,12 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
 
         this.peekView.setOnSweepAcrossListener(new PeekView.OnSweepAcrossListener() {
             @Override
-            public void sweepLeft(int position) {
+            public void sweepLeft() {
                 scrollToNextImage();
             }
 
             @Override
-            public void sweepRight(int position) {
+            public void sweepRight() {
                 scrollToPreviousImage();
             }
         });

@@ -24,11 +24,11 @@ import self.samsung.gallery.R;
 
 public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
-    private List<String> fileNames;
-    private String folderName;
+    private final Context context;
+    private final List<String> fileNames;
+    private final String folderName;
 
-    private BackToMainListener backToMainListener;
+    private final BackToMainListener backToMainListener;
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
@@ -87,20 +87,18 @@ public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private class FolderFileViewHolder extends RecyclerView.ViewHolder {
-        public View view;
-        private ImageView imgv_file_image;
-        private TextView txtv_file_name;
+        private final ImageView imgv_file_image;
+        private final TextView txtv_file_name;
 
         private FolderFileViewHolder(View itemView) {
             super(itemView);
-            this.view = itemView;
             this.imgv_file_image = (ImageView) itemView.findViewById(R.id.imgv_file_image);
             this.txtv_file_name = (TextView) itemView.findViewById(R.id.txtv_file_name);
         }
     }
 
     private class FolderFileViewHeader extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView imgv_get_back;
+        final ImageView imgv_get_back;
 
         FolderFileViewHeader(View itemView) {
             super(itemView);

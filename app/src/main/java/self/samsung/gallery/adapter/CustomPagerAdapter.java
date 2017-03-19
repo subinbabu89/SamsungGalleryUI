@@ -23,12 +23,11 @@ import self.samsung.gallery.model.FolderCover;
 class CustomPagerAdapter extends PagerAdapter {
 
     private FolderCover folderCover;
-    private Context context;
-    private LayoutInflater layoutInflater;
+    private final Context context;
+    private final LayoutInflater layoutInflater;
 
-    CustomPagerAdapter(Context context, FolderCover folderCover) {
+    CustomPagerAdapter(Context context) {
         this.context = context;
-        this.folderCover = folderCover;
         layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

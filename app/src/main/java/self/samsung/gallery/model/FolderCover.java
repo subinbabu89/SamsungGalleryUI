@@ -10,8 +10,8 @@ import java.util.List;
 
 public class FolderCover {
 
-    private String folderName;
-    private List<String> listFileNames;
+    private final String folderName;
+    private final List<String> listFileNames;
 
     public FolderCover(String folderName, List<String> listFileNames) {
         this.folderName = folderName;

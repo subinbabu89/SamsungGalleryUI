@@ -19,7 +19,8 @@
             <self.samsung.gallery.view.SlowerViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:transitionName="image" />
         </self.samsung.gallery.view.SquareRelativeLayout>
 
     </android.support.v7.widget.CardView>
