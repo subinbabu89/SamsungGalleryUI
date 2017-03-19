@@ -44,7 +44,7 @@ public class PeekView {
     private static final int PEEK_VIEW_MARGIN = 12;
     private static final long LONG_CLICK_DURATION = 200;
     private static final int ANIMATION_HIDE_DURATION = 250;
-    private static final int ANIMATION_PEEK_DURATION = 275;
+    private static final int ANIMATION_PEEK_DURATION = 400;
 
     private OnGeneralActionListener onGeneralActionListener;
     private ViewGroup parentViewGroup;
@@ -60,7 +60,6 @@ public class PeekView {
 
         init();
 
-        //TODO: 3. Fix size of the peek view
         //TODO: 4. add padding to peek view
     }
 
@@ -173,9 +172,7 @@ public class PeekView {
             }
 
             if (peekShown) {
-
                 handleTouch(v, event, position);
-
             }
 
             return peekShown;

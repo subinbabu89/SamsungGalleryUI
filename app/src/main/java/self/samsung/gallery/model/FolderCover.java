@@ -13,8 +13,6 @@ public class FolderCover {
     private String folderName;
     private List<String> listFileNames;
 
-    private int currentImageIndex = 0;
-
     public FolderCover(String folderName, List<String> listFileNames) {
         this.folderName = folderName;
         this.listFileNames = listFileNames;
@@ -28,15 +26,4 @@ public class FolderCover {
         return listFileNames;
     }
 
-    public void nextImage() {
-        if (currentImageIndex < listFileNames.size() - 1) {
-            currentImageIndex++;
-        }
-    }
-
-    public void previousImage() {
-        if (currentImageIndex > 0) {
-            currentImageIndex--;
-        }
-    }
 }

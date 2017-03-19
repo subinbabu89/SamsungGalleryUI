@@ -24,8 +24,6 @@ class PeekViewAnimationHelper {
         this.context = context;
         this.peekLayout = peekLayout;
         this.peekView = peekView;
-
-        //TODO: 1. Fix animatePeek animation
     }
 
     /**
@@ -44,7 +42,7 @@ class PeekViewAnimationHelper {
         ObjectAnimator animatorScaleY = ObjectAnimator.ofFloat(peekView, "scaleY", 1);
         animatorScaleY.setDuration(duration);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new OvershootInterpolator(1.2f));
+        animatorSet.setInterpolator(new OvershootInterpolator(2.0f));
         animatorSet.play(animatorScaleX).with(animatorScaleY);
 
         animatorSet.start();

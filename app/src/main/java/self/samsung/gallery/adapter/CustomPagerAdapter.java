@@ -81,7 +81,7 @@ class CustomPagerAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-    void setDemoObject(FolderCover demoObject) {
-        this.folderCover = demoObject;
+    void setFolderCover(FolderCover folderCover) {
+        this.folderCover = folderCover;
     }
 }

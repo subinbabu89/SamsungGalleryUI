@@ -2,7 +2,6 @@ package self.samsung.gallery.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import java.util.List;
 import self.samsung.gallery.R;
 import self.samsung.gallery.model.FolderCover;
 import self.samsung.gallery.peekview.PeekView;
+import self.samsung.gallery.view.SlowerViewPager;
 
 /**
  * Adapter class written for the recycler view on the main screen with folder covers
@@ -33,7 +33,7 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
 
     private PeekView peekView;
 
-    private ViewPager viewPager;
+    private SlowerViewPager viewPager;
     private CustomPagerAdapter customPagerAdapter;
 
     public FolderCoverAdapter(Context context, List<FolderCover> folderCovers, FolderCoverClickListener folderCoverClickListener, PeekView peekView) {
@@ -44,14 +44,13 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
 
 
         View peek = peekView.getPeekView();
-        viewPager = (ViewPager) peek.findViewById(R.id.pager);
+        viewPager = (SlowerViewPager) peek.findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(2);
         this.customPagerAdapter = new CustomPagerAdapter(peek.getContext(), null);
         viewPager.setAdapter(customPagerAdapter);
+        viewPager.setScrollDurationFactor(4);
 
         setupPeekAndPopStandard();
-
-        //TODO: 2. Slow down animation for pager
     }
 
     @Override
@@ -120,36 +119,37 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
 
             @Override
             public void onHide(View view, int position) {
+                View peek = peekView.getPeekView();
+                viewPager = (SlowerViewPager) peek.findViewById(R.id.pager);
+                viewPager.setCurrentItem(0);
             }
         });
 
         this.peekView.setOnSweepAcrossListener(new PeekView.OnSweepAcrossListener() {
             @Override
             public void sweepLeft(int position) {
-                scrollToNextImage(position);
+                scrollToNextImage();
             }
 
             @Override
             public void sweepRight(int position) {
-                scrollToPreviousImage(position);
+                scrollToPreviousImage();
             }
         });
     }
 
     private void loadPeekAndPop(int position) {
-        customPagerAdapter.setDemoObject(folderCovers.get(position));
+        customPagerAdapter.setFolderCover(folderCovers.get(position));
         customPagerAdapter.notifyDataSetChanged();
     }
 
-    private void scrollToNextImage(int position) {
-        folderCovers.get(position).nextImage();
+    private void scrollToNextImage() {
         if (viewPager.getCurrentItem() < viewPager.getAdapter().getCount() - 1) {
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
         }
     }
 
-    private void scrollToPreviousImage(int position) {
-        folderCovers.get(position).previousImage();
+    private void scrollToPreviousImage() {
         if (viewPager.getCurrentItem() > 0) {
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
