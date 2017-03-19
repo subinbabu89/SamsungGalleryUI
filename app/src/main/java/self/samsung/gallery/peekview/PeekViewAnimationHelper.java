@@ -24,6 +24,8 @@ class PeekViewAnimationHelper {
         this.context = context;
         this.peekLayout = peekLayout;
         this.peekView = peekView;
+
+        //TODO: 1. Fix animatePeek animation
     }
 
     /**

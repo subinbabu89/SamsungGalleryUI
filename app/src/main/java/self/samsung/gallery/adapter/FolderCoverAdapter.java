@@ -50,6 +50,8 @@ public class FolderCoverAdapter extends RecyclerView.Adapter<FolderCoverAdapter.
         viewPager.setAdapter(customPagerAdapter);
 
         setupPeekAndPopStandard();
+
+        //TODO: 2. Slow down animation for pager
     }
 
     @Override

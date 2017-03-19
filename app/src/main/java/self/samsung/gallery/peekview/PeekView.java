@@ -59,6 +59,9 @@ public class PeekView {
         this.parentViewGroup = parentViewGroup;
 
         init();
+
+        //TODO: 3. Fix size of the peek view
+        //TODO: 4. add padding to peek view
     }
 
     private void init() {
