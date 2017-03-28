@@ -11,17 +11,16 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import self.samsung.gallery.R;
+import self.samsung.gallery.util.Util;
 
 /**
  * Adapter class for the recyclerview with files from each folder.
  * <p>
  * Created by subin on 3/17/2017.
  */
-
 public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context context;
@@ -33,6 +32,14 @@ public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
+    /**
+     * Constructor to initialize the adapter
+     *
+     * @param context            calling context of the adapter
+     * @param fileNames          List of names for files in the particular folder
+     * @param folderName         name of the folder
+     * @param backToMainListener Listener interface to navigate back to the parent activity
+     */
     public FolderAdapter(Context context, List<String> fileNames, String folderName, BackToMainListener backToMainListener) {
         this.context = context;
         this.fileNames = fileNames;
@@ -50,23 +57,22 @@ public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return new FolderFileViewHeader(view);
         }
 
-        throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
-
+        throw new RuntimeException(context.getString(R.string.no_matching_type_exception_message, viewType));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof FolderFileViewHolder) {
             FolderFileViewHolder vHolder = (FolderFileViewHolder) holder;
-            // load image
             try {
-                // get input stream
-                InputStream ims = context.getAssets().open(folderName + File.separator + fileNames.get(position - 1));
-                // load image as Drawable
-                Drawable d = Drawable.createFromStream(ims, null);
-                // set image to ImageView
-                vHolder.imgv_file_image.setImageDrawable(d);
-                vHolder.txtv_file_name.setText(fileNames.get(position - 1));
+                String filename = fileNames.get(position - 1);
+
+                StringBuilder fileNameBuilder;
+                fileNameBuilder = new StringBuilder().append(folderName).append(File.separator).append(filename);
+                Drawable drawable = Util.fetchDrawableFromAssets(context, fileNameBuilder.toString());
+
+                vHolder.imgv_file_image.setImageDrawable(drawable);
+                vHolder.txtv_file_name.setText(filename);
             } catch (IOException ex) {
                 //catch exception here
             }
@@ -82,14 +88,21 @@ public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemViewType(int position) {
         if (position == 0)
             return TYPE_HEADER;
-
         return TYPE_ITEM;
     }
 
+    /**
+     * ViewHolder implementation for the files view
+     */
     private class FolderFileViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imgv_file_image;
         private final TextView txtv_file_name;
 
+        /**
+         * Constructor to initialize the viewholder
+         *
+         * @param itemView view used to intialize the components
+         */
         private FolderFileViewHolder(View itemView) {
             super(itemView);
             this.imgv_file_image = (ImageView) itemView.findViewById(R.id.imgv_file_image);
@@ -97,9 +110,17 @@ public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    /**
+     * ViewHolder implementation for the header view
+     */
     private class FolderFileViewHeader extends RecyclerView.ViewHolder implements View.OnClickListener {
         final ImageView imgv_get_back;
 
+        /**
+         * Constructor to initialize the viewholder
+         *
+         * @param itemView view used to intialize the components
+         */
         FolderFileViewHeader(View itemView) {
             super(itemView);
             this.imgv_get_back = (ImageView) itemView.findViewById(R.id.imgv_get_back);
@@ -112,7 +133,14 @@ public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    /**
+     * Interface listeners to navigate back to the parent activity
+     */
     public interface BackToMainListener {
+
+        /**
+         * Navigate to parent activity of the current calling context
+         */
         void onBackToMainPressed();
     }
 }

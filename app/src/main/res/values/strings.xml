@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Samsung Gallery UI</string>
     <string name="default_content_description_for_imageviews">default content description for imageviews</string>
+    <string name="no_matching_type_exception_message">there is no type that matches the type %d + make sure your using types correctly</string>
 </resources>

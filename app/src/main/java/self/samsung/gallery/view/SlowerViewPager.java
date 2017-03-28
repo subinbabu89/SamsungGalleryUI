@@ -12,7 +12,6 @@ import java.lang.reflect.Field;
  * <p>
  * Created by subin on 3/19/2017.
  */
-
 public class SlowerViewPager extends ViewPager {
 
     public SlowerViewPager(Context context) {
@@ -28,8 +27,7 @@ public class SlowerViewPager extends ViewPager {
     private SlowerCustomScroller mScroller = null;
 
     /**
-     * Override the Scroller instance with our own class so we can change the
-     * duration
+     * Overriden Scroller instance so we can change the duration
      */
     private void postInitViewPager() {
         try {

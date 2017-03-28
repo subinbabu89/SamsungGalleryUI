@@ -10,23 +10,28 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import self.samsung.gallery.R;
 import self.samsung.gallery.model.FolderCover;
+import self.samsung.gallery.util.Util;
 
 /**
  * Pager Adapter written for the paging animation of the images.
  * <p>
  * Created by subin on 3/17/2017.
  */
-class CustomPagerAdapter extends PagerAdapter {
+class FolderImagePagerAdapter extends PagerAdapter {
 
     private FolderCover folderCover;
     private final Context context;
     private final LayoutInflater layoutInflater;
 
-    CustomPagerAdapter(Context context) {
+    /**
+     * Method used to intialize the pager adapter
+     *
+     * @param context calling context
+     */
+    FolderImagePagerAdapter(Context context) {
         this.context = context;
         layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -61,15 +66,19 @@ class CustomPagerAdapter extends PagerAdapter {
         return itemView;
     }
 
+    /**
+     * Method used to load the images from assets folders
+     *
+     * @param imageView imageView to load the image to
+     * @param position  position for image to be loaded in the filename list
+     */
     private void loadImage(ImageView imageView, int position) {
-        // load image
         try {
-            // get input stream
-            InputStream ims = context.getAssets().open(folderCover.getFolderName() + File.separator + folderCover.getFileNames().get(position));
-            // load image as Drawable
-            Drawable d = Drawable.createFromStream(ims, null);
-            // set image to ImageView
-            imageView.setImageDrawable(d);
+            StringBuilder fileNameBuilder;
+            fileNameBuilder = new StringBuilder().append(folderCover.getFolderName()).append(File.separator).append(folderCover.getFileNames().get(position));
+            Drawable drawable = Util.fetchDrawableFromAssets(context, fileNameBuilder.toString());
+
+            imageView.setImageDrawable(drawable);
         } catch (IOException ex) {
             //catch exception here
         }
@@ -80,6 +89,11 @@ class CustomPagerAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    /**
+     * Method used to initalize the FolderCover for the pager.
+     *
+     * @param folderCover FolderCover to load the images in the loader to
+     */
     void setFolderCover(FolderCover folderCover) {
         this.folderCover = folderCover;
     }

@@ -27,18 +27,15 @@ public class MainActivity extends AppCompatActivity implements FolderCoverAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //TODO: 6. Check dimensions for folder cover view
-        //TODO: 7. Check dimensions for folder cover margins
-
-        //TODO: 8. Check Text dimensions
-        //TODO: 9. Check Text text color
-        //TODO: 10. Check Text text background
 
         this.overridePendingTransition(R.anim.anim_slide_in_down,
                 R.anim.anim_slide_out_down);
         setupRecyclerView();
     }
 
+    /**
+     * Method to initialize the recyler view with files
+     */
     private void setupRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.folder_cover_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);

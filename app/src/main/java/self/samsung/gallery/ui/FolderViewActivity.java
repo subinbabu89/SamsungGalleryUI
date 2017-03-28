@@ -34,6 +34,9 @@ public class FolderViewActivity extends AppCompatActivity implements FolderAdapt
         setupRecyclerView();
     }
 
+    /**
+     * Method to initialize the recycler view with folder covers
+     */
     private void setupRecyclerView() {
         RecyclerView folderRecyclerView = (RecyclerView) findViewById(R.id.file_names_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);

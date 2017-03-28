@@ -14,12 +14,18 @@ import android.view.animation.OvershootInterpolator;
  * <p>
  * Created by subin on 3/17/2017.
  */
-
 class PeekViewAnimationHelper {
     private final View peekLayout;
     private final View peekView;
     private final Context context;
 
+    /**
+     * Constructor to initialize the helper class with
+     *
+     * @param context    calling context
+     * @param peekLayout layout to animate
+     * @param peekView   PeekView view
+     */
     PeekViewAnimationHelper(Context context, View peekLayout, View peekView) {
         this.context = context;
         this.peekLayout = peekLayout;
@@ -27,10 +33,8 @@ class PeekViewAnimationHelper {
     }
 
     /**
-     * Occurs on on long hold.
+     * Should happen on peek
      * <p/>
-     * Animates the peek view to fade in and scale to it's full size.
-     * Also fades the peek background layout in.
      */
     void animatePeek(int duration) {
         peekView.setAlpha(1);
@@ -50,10 +54,9 @@ class PeekViewAnimationHelper {
     }
 
     /**
-     * Occurs on touch up.
+     * Should happen on hide.
      * <p/>
-     * Animates the peek view to return to it's original position and shrink.
-     * Also animate the peek background layout to fade out.
+     * fades out the background
      */
     void animateHide(Animator.AnimatorListener animatorListener, int duration) {
         ObjectAnimator animatorLayoutAlpha = ObjectAnimator.ofFloat(peekLayout, "alpha", 0);
@@ -66,9 +69,8 @@ class PeekViewAnimationHelper {
     }
 
     /**
-     * Occurs when the peek view is dragged but not flung.
+     * Should happen on hide
      * <p/>
-     * Animate the peek view back to it's original position and shrink it.
      */
     private void animateReturn(int duration) {
         ObjectAnimator animatorTranslate;

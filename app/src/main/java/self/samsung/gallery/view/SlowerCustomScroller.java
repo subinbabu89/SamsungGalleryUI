@@ -9,7 +9,6 @@ import android.widget.Scroller;
  * <p>
  * Created by subin on 3/19/2017.
  */
-
 class SlowerCustomScroller extends Scroller {
 
     private double mScrollFactor = 1;
